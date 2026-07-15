@@ -1202,6 +1202,8 @@ async def search_handler(message: types.Message):
 
 @dp.message(lambda message: message.text and not message.text.startswith('/') and not message.text in ["📊 Statistika", "📝 So'zlar qo'shish", "⚙️ Sozlamalar", "🔍 Qidiruv", "🕜 Oxirgi 10 ta zakaz", "📋 Guruh statistikasi"])
 async def handle_text_message(message: types.Message):
+    if message.chat.type != 'private':
+        return
     user_id = message.from_user.id
     
     # Profil sozlamalari - buyurtma guruhi o'zgartirish
