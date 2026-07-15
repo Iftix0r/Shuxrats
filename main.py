@@ -349,6 +349,40 @@ async def chat_action_handler(event):
 
 @client.on(events.NewMessage(incoming=True))
 async def handler(event):
+    # Bot yuborgan buyurtma xabarlarini aniqlash va tagidan userbot orqali havola yuborish
+    bot_id = int(BOT_TOKEN.split(':')[0])
+    if event.sender_id == bot_id:
+        text = event.message.text or ""
+        if "ZAKAZ" in text or "YANGI BUYURTMA" in text or "YANGI ZAKAZ" in text:
+            try:
+                user_id = None
+                user_name = "Foydalanuvchi"
+                
+                if event.message.entities:
+                    for entity in event.message.entities:
+                        if hasattr(entity, 'url') and entity.url and 'tg://user?id=' in entity.url:
+                            user_id = int(entity.url.split('id=')[1])
+                            offset = entity.offset
+                            length = entity.length
+                            user_name = event.message.text[offset:offset+length]
+                            user_name = user_name.replace('*', '').replace('_', '').replace('👤', '').strip()
+                            break
+                
+                if user_id:
+                    if "Mijoz lichkasi" not in text:
+                        userbot_msg = f"Mijoz lichkasi: <a href='tg://user?id={user_id}'>{user_name}</a>"
+                        await client.send_message(
+                            entity=event.chat_id,
+                            message=userbot_msg,
+                            parse_mode='html',
+                            reply_to=event.id
+                        )
+                        print(f"✅ Bot buyurtma xabariga javoban userbot orqali havola yuborildi: {user_name} ({user_id})")
+            except Exception as e:
+                logger.error(f"Bot buyurtma xabarini qayta ishlashda xatolik: {e}")
+                print(f"❌ Bot buyurtma xabarini qayta ishlashda xatolik: {e}")
+        return
+
     # Guruh va lichkadan kelgan xabarlarni qabul qilish
     is_private = event.is_private
     is_source_group = event.is_group and event.chat_id == SOURCE_GROUP_ID
@@ -583,9 +617,6 @@ async def handler(event):
     # Kontakt ma'lumotlari - emoji bilan (faqat xabar bo'lsa)
     if base_text.strip() and user_details.strip():
         message_parts.append(f"{user_details.strip()}")
-    
-    if user_id and user_id > 0:
-        message_parts.append(f"Mijoz lichkasi: <a href='tg://user?id={user_id}'>{user_name}</a>")
     
     message = "\n\n".join(message_parts)
     

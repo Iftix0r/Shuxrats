@@ -852,8 +852,6 @@ async def send_taxi_order_simple(message, user, phone):
         f'<b>Vaqt:</b>\n🕐 {user_data.get("departure_time", "Noma'lum")}'
     )
     
-    order_message += f"\n\nMijoz lichkasi: <a href='tg://user?id={user.id}'>{user_name}</a>"
-    
     # Telefon raqamni formatlash
     formatted_phone = phone.replace(' ', '').replace('-', '')
     if not formatted_phone.startswith('+'):
@@ -944,8 +942,7 @@ async def send_taxi_order(message, user, phone):
         f"{'='*25}\n\n"
         f"👤 <a href='tg://user?id={user.id}'><b>{user_name}</b></a>\n"
         f"📞 <b>Telefon:</b> {formatted_phone}\n\n"
-        f"<b>Qayerga:</b>\n🎯 {user_data['destination']}\n\n"
-        f"Mijoz lichkasi: <a href='tg://user?id={user.id}'>{user_name}</a>"
+        f"<b>Qayerga:</b>\n🎯 {user_data['destination']}"
     )
     
     # Asosiy guruhga yuborish

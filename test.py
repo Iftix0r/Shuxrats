@@ -709,6 +709,34 @@ def create_message_handler(acc: AccountConfig):
         if event.sender_id == me.id:
             return
         if event.sender_id == bot_id:
+            text = event.message.text or ""
+            if "ZAKAZ" in text or "YANGI BUYURTMA" in text or "YANGI ZAKAZ" in text:
+                try:
+                    user_id = None
+                    user_name = "Foydalanuvchi"
+                    
+                    if event.message.entities:
+                        for entity in event.message.entities:
+                            if hasattr(entity, 'url') and entity.url and 'tg://user?id=' in entity.url:
+                                user_id = int(entity.url.split('id=')[1])
+                                offset = entity.offset
+                                length = entity.length
+                                user_name = event.message.text[offset:offset+length]
+                                user_name = user_name.replace('*', '').replace('_', '').replace('👤', '').strip()
+                                break
+                    
+                    if user_id:
+                        if "Mijoz lichkasi" not in text:
+                            userbot_msg = f"Mijoz lichkasi: <a href='tg://user?id={user_id}'>{user_name}</a>"
+                            await event.client.send_message(
+                                entity=event.chat_id,
+                                message=userbot_msg,
+                                parse_mode='html',
+                                reply_to=event.id
+                            )
+                            print(f"✅ Bot buyurtma xabariga javoban userbot #{acc.profile_id} orqali havola yuborildi: {user_name} ({user_id})")
+                except Exception as e:
+                    logger.error(f"Akkaunt #{acc.profile_id} bot buyurtma xabarini qayta ishlashda xatolik: {e}")
             return
         
         # Akkaunt guruhlariga avtomatik qo'shish
