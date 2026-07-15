@@ -837,16 +837,22 @@ async def contact_handler(message: types.Message):
 async def send_taxi_order_simple(message, user, phone):
     user_data = taxi_users[user.id]
     
+    user_name = f"{user.first_name or 'Foydalanuvchi'}"
+    if user.last_name:
+        user_name = f"{user.first_name} {user.last_name}"
+        
     # Zakazni guruhga yuborish
     order_message = (
         f"🚕 <b>YANGI ZAKAZ</b>\n"
         f"{'='*25}\n\n"
-        f"<b></b>\n👤 {user.first_name or 'Foydalanuvchi'}\n\n"
+        f"👤 <a href='tg://user?id={user.id}'><b>{user_name}</b></a>\n"
         f"<b>Telefon:</b>\n📞 {phone}\n\n"
         f"<b>Yo'nalish:</b>\n🚗 {user_data['from_city']} ➡️ {user_data['to_city']}\n\n"
         f'<b>Yo\'lovchilar:</b>\n👥 {user_data.get("passenger_count", "Noma'lum")}\n\n'
         f'<b>Vaqt:</b>\n🕐 {user_data.get("departure_time", "Noma'lum")}'
     )
+    
+    order_message += f"\n\nMijoz lichkasi: <a href='tg://user?id={user.id}'>{user_name}</a>"
     
     # Telefon raqamni formatlash
     formatted_phone = phone.replace(' ', '').replace('-', '')
@@ -929,12 +935,17 @@ async def send_taxi_order(message, user, phone):
     )
     
     # Zakazni guruhga yuborish
+    user_name = f"{user.first_name or 'Foydalanuvchi'}"
+    if user.last_name:
+        user_name = f"{user.first_name} {user.last_name}"
+        
     order_message = (
         f"🚕 <b>YANGI ZAKAZ</b>\n"
         f"{'='*25}\n\n"
-        f"<b>Muboradi Mijoz Ismi:</b>\n👤 {user.first_name or 'Foydalanuvchi'}\n\n"
-        f"<b>Telefon:</b>\n📞 {formatted_phone}\n\n"
-        f"<b>Qayerga:</b>\n🎯 {user_data['destination']}"
+        f"👤 <a href='tg://user?id={user.id}'><b>{user_name}</b></a>\n"
+        f"📞 <b>Telefon:</b> {formatted_phone}\n\n"
+        f"<b>Qayerga:</b>\n🎯 {user_data['destination']}\n\n"
+        f"Mijoz lichkasi: <a href='tg://user?id={user.id}'>{user_name}</a>"
     )
     
     # Asosiy guruhga yuborish

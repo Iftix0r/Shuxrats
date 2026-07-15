@@ -947,7 +947,7 @@ async def send_taxi_order_simple(message, user, phone):
         f"   {user_data['from_city']} ➡️ {user_data['to_city']}\n\n"
         f'👥 <b>Yo\'lovchilar:</b> {user_data.get("passenger_count", "Noma'lum")}\n'
         f'🕐 <b>Vaqt:</b> {user_data.get("departure_time", "Noma'lum")}\n\n'
-        f"<b>Mijoz:</b> {user_name}"
+        f"Mijoz lichkasi: <a href='tg://user?id={user.id}'>{user_name}</a>"
     )
     
     # Tugmalarni tayyorlash
@@ -1045,7 +1045,8 @@ async def send_taxi_order(message, user, phone):
         f"{'='*25}\n\n"
         f"👤 <a href='tg://user?id={user.id}'><b>{user_name}</b></a>\n"
         f"📞 <b>Telefon:</b> {formatted_phone}\n"
-        f"🎯 <b>Qayerga:</b> {user_data['destination']}"
+        f"🎯 <b>Qayerga:</b> {user_data['destination']}\n\n"
+        f"Mijoz lichkasi: <a href='tg://user?id={user.id}'>{user_name}</a>"
     )
     
     # Tugmalarni tayyorlash
@@ -1145,7 +1146,7 @@ async def send_order_buttons(user_id, user_name, formatted_phone, username):
         order_keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         
         # Tugmalar xabari
-        buttons_message = f"🚕 <b>ZAKAZ TUGMALARI</b>\n\n👤 {user_name}\n📞 {formatted_phone}"
+        buttons_message = f"🚕 <b>ZAKAZ TUGMALARI</b>\n\n👤 {user_name}\n📞 {formatted_phone}\n\nMijoz lichkasi: <a href='tg://user?id={user_id}'>{user_name}</a>"
         
         # Asosiy guruhga yuborish
         await bot.send_message(

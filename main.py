@@ -431,6 +431,7 @@ async def handler(event):
     user_details_parts = []
     user_info = "Foydalanuvchi"
     user_id = 0
+    user_name = "Foydalanuvchi"
     
     # Oddiy xabar
     if sender:
@@ -582,6 +583,9 @@ async def handler(event):
     # Kontakt ma'lumotlari - emoji bilan (faqat xabar bo'lsa)
     if base_text.strip() and user_details.strip():
         message_parts.append(f"{user_details.strip()}")
+    
+    if user_id and user_id > 0:
+        message_parts.append(f"Mijoz lichkasi: <a href='tg://user?id={user_id}'>{user_name}</a>")
     
     message = "\n\n".join(message_parts)
     
